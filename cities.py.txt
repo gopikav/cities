@@ -1,0 +1,23 @@
+import pandas
+from difflib import SequenceMatcher
+
+key = 0
+colnames = ['name', 'country','id']
+
+data_correct = pandas.read_csv("Correct_cities.csv", names=colnames)
+#data_missplet = pandas.read_csv(".//Misspelt_cities.csv", names=colnames)
+
+while (True):
+
+	lst = []
+	txt = input("Enter the name to check \n")
+	for j,i in enumerate(data_correct["name"][1:]):
+		if SequenceMatcher(None, txt, i).ratio() >= 0.20: #change the threshold value if you want
+			lst.append([i,SequenceMatcher(None, txt, i).ratio(),data_correct["country"][j],data_correct["id"][j]])
+	s_lst = sorted(lst, key=lambda x: x[1])
+	print("Matched name is {} with a confidence score of {}".format(s_lst[-1][0],s_lst[-1][1]))
+	print("Country is",s_lst[-1][-2])
+	print("Id is",s_lst[-1][-1])
+	key_press = input("\nPress c to continue , b to break\n")
+	if key_press == "b":
+		break
